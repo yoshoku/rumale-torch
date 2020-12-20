@@ -37,14 +37,9 @@ module Rumale
 
         y_train = encoder.transform(y_train)
         y_test = encoder.transform(y_test)
-        x_train_tensor = ::Torch.from_numo(x_train).to(:float32)
-        x_test_tensor = ::Torch.from_numo(x_test).to(:float32)
-        y_train_tensor = ::Torch.from_numo(y_train).to(:int64)
-        y_test_tensor = ::Torch.from_numo(y_test).to(:int64)
-        train_dataset = ::Torch::Utils::Data::TensorDataset.new(x_train_tensor, y_train_tensor)
-        train_loader = ::Torch::Utils::Data::DataLoader.new(train_dataset, batch_size: batch_size, shuffle: shuffle)
-        test_dataset = ::Torch::Utils::Data::TensorDataset.new(x_test_tensor, y_test_tensor)
-        test_loader = ::Torch::Utils::Data::DataLoader.new(test_dataset, batch_size: batch_size, shuffle: shuffle)
+
+        train_loader = torch_data_loader(x_train, y_train)
+        test_loader = torch_data_loader(x_test, y_test)
 
         1.upto(max_epochs) do |epoch|
           train(train_loader)
@@ -71,6 +66,13 @@ module Rumale
       end
 
       private
+
+      def torch_data_loader(x, y)
+        x_tensor = ::Torch.from_numo(x).to(:float32)
+        y_tensor = ::Torch.from_numo(y).to(:int64)
+        dataset = ::Torch::Utils::Data::TensorDataset.new(x_tensor, y_tensor)
+        ::Torch::Utils::Data::DataLoader.new(dataset, batch_size: batch_size, shuffle: shuffle)
+      end
 
       def train(data_loader)
         model.train
