@@ -1,0 +1,31 @@
+# frozen_string_literal: true
+
+require_relative 'lib/rumale/torch/version'
+
+Gem::Specification.new do |spec|
+  spec.name          = 'rumale-torch'
+  spec.version       = Rumale::Torch::VERSION
+  spec.authors       = ['yoshoku']
+  spec.email         = ['yoshoku@outlook.com']
+
+  spec.summary       = 'Rumale::Torch'
+  spec.description   = 'Rumale::Torch'
+  spec.homepage      = 'https://github.com/yoshoku/rumale-torch'
+  spec.license       = 'BSD-2-Clause'
+
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = spec.homepage
+  spec.metadata['changelog_uri'] = 'https://github.com/yoshoku/rumale-torch/blob/main/CHANGELOG.md'
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
+  end
+  spec.bindir        = 'exe'
+  spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
+
+  spec.add_runtime_dependency 'rumale'
+  spec.add_runtime_dependency 'torch-rb'
+end
