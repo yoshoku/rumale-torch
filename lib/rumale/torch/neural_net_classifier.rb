@@ -55,13 +55,13 @@ module Rumale
       end
 
       def predict(x)
-        output = model.call(::Torch.from_numo(x).to(:float32))
+        output = ::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }
         _, indices = ::Torch.max(output, 1)
         @classes[indices.numo].dup
       end
 
       def decision_function(x)
-        output = model.call(::Torch.from_numo(x).to(:float32))
+        output = ::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }
         output.numo
       end
 
