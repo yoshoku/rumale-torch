@@ -12,7 +12,7 @@ module Rumale
       include Base::Classifier
 
       def initialize(model:, device: nil, optimizer: nil, loss: nil,
-                     batch_size: 50, shuffle: true, epochs: 5, validation_split: 0.1,
+                     batch_size: 50, shuffle: true, max_epochs: 5, validation_split: 0.1,
                      verbose: true)
         @params = {}
         @params[:model] = model
@@ -21,7 +21,7 @@ module Rumale
         @params[:loss] = loss || ::Torch::NN::CrossEntropyLoss.new
         @params[:batch_size] = batch_size
         @params[:shuffle] = shuffle
-        @params[:epochs] = epochs
+        @params[:max_epochs] = max_epochs
         @params[:validation_split] = validation_split
         @params[:verbose] = verbose
       end
@@ -46,11 +46,11 @@ module Rumale
         test_dataset = ::Torch::Utils::Data::TensorDataset.new(x_test_tensor, y_test_tensor)
         test_loader = ::Torch::Utils::Data::DataLoader.new(test_dataset, batch_size: batch_size, shuffle: shuffle)
 
-        epochs.times do |epc|
+        1.upto(max_epochs) do |epoch|
           train(train_loader)
           next unless verbose
 
-          puts("Epoch: #{epc + 1}/#{epochs}")
+          puts("Epoch: #{epoch}/#{max_epochs}")
           puts('loss: %.4f - accuracy: %.4f - val_loss: %.4f - val_accuracy: %.4f' % [
             evaluate(train_loader), evaluate(test_loader)
           ].flatten)
@@ -129,8 +129,8 @@ module Rumale
         @params[:shuffle]
       end
 
-      def epochs
-        @params[:epochs]
+      def max_epochs
+        @params[:max_epochs]
       end
 
       def validation_split

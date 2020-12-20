@@ -22,7 +22,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
       end
     end
     model = MyNet.new.to(Torch.device('cpu'))
-    described_class.new(model: model, batch_size: 20, epochs: 20)
+    described_class.new(model: model, batch_size: 20, max_epochs: 20)
   end
 
   let(:dataset) do
