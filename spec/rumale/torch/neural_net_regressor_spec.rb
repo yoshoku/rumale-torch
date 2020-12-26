@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'numo/narray'
-require 'rumale/dataset'
-
 RSpec.describe Rumale::Torch::NeuralNetRegressor do
   let(:x) do
     centers = Numo::DFloat[[-5, 0], [5, 0]]

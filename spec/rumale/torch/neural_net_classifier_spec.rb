@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'numo/narray'
-require 'rumale/dataset'
-
 RSpec.describe Rumale::Torch::NeuralNetClassifier do
   let(:classifier) do
     class MyNet < Torch::NN::Module
