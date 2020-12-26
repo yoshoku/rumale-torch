@@ -59,8 +59,7 @@ module Rumale
       end
 
       def decision_function(x)
-        output = ::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }
-        output.numo
+        ::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }.numo
       end
 
       private
