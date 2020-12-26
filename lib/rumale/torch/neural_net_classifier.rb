@@ -14,16 +14,14 @@ module Rumale
       def initialize(model:, device: nil, optimizer: nil, loss: nil,
                      batch_size: 50, shuffle: true, max_epochs: 5, validation_split: 0.1,
                      verbose: true)
-        @params = {}
-        @params[:model] = model
-        @params[:device] = device || ::Torch.device('cpu')
-        @params[:optimizer] = optimizer || ::Torch::Optim::Adam.new(model.parameters)
-        @params[:loss] = loss || ::Torch::NN::CrossEntropyLoss.new
-        @params[:batch_size] = batch_size
-        @params[:shuffle] = shuffle
-        @params[:max_epochs] = max_epochs
-        @params[:validation_split] = validation_split
-        @params[:verbose] = verbose
+        @params = method(:initialize).parameters.each_with_object({}) { |(_, kwd), obj| obj[kwd] = binding.local_variable_get(kwd) }
+        @params[:device] ||= ::Torch.device('cpu')
+        @params[:optimizer] ||= ::Torch::Optim::Adam.new(model.parameters)
+        @params[:loss] ||= ::Torch::NN::CrossEntropyLoss.new
+        @params.each_key do |name|
+          self.class.send(:define_method, name) { @params[name] }
+          self.class.send(:private, name)
+        end
       end
 
       def fit(x, y)
@@ -105,42 +103,6 @@ module Rumale
         mean_loss /= data_loader.dataset.size
         accuracy = correct.fdiv(data_loader.dataset.size)
         [mean_loss, accuracy]
-      end
-
-      def model
-        @params[:model]
-      end
-
-      def device
-        @params[:device]
-      end
-
-      def optimizer
-        @params[:optimizer]
-      end
-
-      def loss
-        @params[:loss]
-      end
-
-      def batch_size
-        @params[:batch_size]
-      end
-
-      def shuffle
-        @params[:shuffle]
-      end
-
-      def max_epochs
-        @params[:max_epochs]
-      end
-
-      def validation_split
-        @params[:validation_split]
-      end
-
-      def verbose
-        @params[:verbose]
       end
     end
   end
