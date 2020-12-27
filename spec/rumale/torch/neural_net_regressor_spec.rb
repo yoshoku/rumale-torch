@@ -13,7 +13,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
       class MyNet < Torch::NN::Module
         def initialize
           super
-          @dropout2 = Torch::NN::Dropout2d.new(p: 0.5)
+          @dropout = Torch::NN::Dropout.new(p: 0.5)
           @fc1 = Torch::NN::Linear.new(2, 64)
           @fc2 = Torch::NN::Linear.new(64, 1)
         end
@@ -21,12 +21,12 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
         def forward(x)
           x = @fc1.call(x)
           x = Torch::NN::F.relu(x)
-          x = @dropout2.call(x)
+          x = @dropout.call(x)
           @fc2.call(x)
         end
       end
       model = MyNet.new.to(Torch.device('cpu'))
-      described_class.new(model: model, batch_size: 20, max_epochs: 20)
+      described_class.new(model: model, batch_size: 20, max_epoch: 20)
     end
 
     it do
@@ -56,7 +56,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
         end
       end
       model = MyNet.new.to(Torch.device('cpu'))
-      described_class.new(model: model, batch_size: 20, max_epochs: 20)
+      described_class.new(model: model, batch_size: 20, max_epoch: 20)
     end
 
     it do

@@ -5,7 +5,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
     class MyNet < Torch::NN::Module
       def initialize
         super
-        @dropout2 = Torch::NN::Dropout2d.new(p: 0.5)
+        @dropout = Torch::NN::Dropout.new(p: 0.5)
         @fc1 = Torch::NN::Linear.new(2, 8)
         @fc2 = Torch::NN::Linear.new(8, 2)
       end
@@ -13,13 +13,13 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
       def forward(x)
         x = @fc1.call(x)
         x = Torch::NN::F.relu(x)
-        x = @dropout2.call(x)
+        x = @dropout.call(x)
         x = @fc2.call(x)
         Torch::NN::F.softmax(x)
       end
     end
     model = MyNet.new.to(Torch.device('cpu'))
-    described_class.new(model: model, batch_size: 20, max_epochs: 20)
+    described_class.new(model: model, batch_size: 20, max_epoch: 20)
   end
 
   let(:dataset) do
