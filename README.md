@@ -4,6 +4,11 @@ Rumale::Torch provides the learning and inference by the neural network defined 
 with the same interface as [Rumale](https://github.com/yoshoku/rumale).
 
 ## Installation
+torch.rb is a runtime dependent gem of Rumale::Torch. It requires to install [LibTorch](https://github.com/ankane/torch.rb#libtorch-installation):
+
+    $ brew install automake libtorch
+
+Here, automake is needed to install [rice](https://github.com/jasonroelofs/rice) gem, which torch.rb depends on.
 
 Add this line to your application's Gemfile:
 
