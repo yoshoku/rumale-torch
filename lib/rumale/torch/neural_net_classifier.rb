@@ -123,7 +123,7 @@ module Rumale
       # @param x [Numo::DFloat] (shape: [n_samples, n_features]) The samples to compute the scores.
       # @return [Numo::DFloat] (shape: [n_samples, n_classes]) The confidence score per sample.
       def decision_function(x)
-        ::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }.numo
+        Numo::DFloat.cast(::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }.numo)
       end
 
       private
