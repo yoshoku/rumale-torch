@@ -105,7 +105,7 @@ module Rumale
       # @param x [Numo::DFloat] (shape: [n_samples, n_features]) The samples to predict the values.
       # @return [Numo::DFloat] (shape: [n_samples, n_outputs]) The predicted values per sample.
       def predict(x)
-        output = ::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }.numo
+        output = Numo::DFloat.cast(::Torch.no_grad { model.call(::Torch.from_numo(x).to(:float32)) }.numo)
         output.shape[1] == 1 ? output[true, 0].dup : output
       end
 
