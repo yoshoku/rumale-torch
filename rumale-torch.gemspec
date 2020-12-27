@@ -3,15 +3,15 @@
 require_relative 'lib/rumale/torch/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'rumale-torch'
-  spec.version       = Rumale::Torch::VERSION
-  spec.authors       = ['yoshoku']
-  spec.email         = ['yoshoku@outlook.com']
+  spec.name        = 'rumale-torch'
+  spec.version     = Rumale::Torch::VERSION
+  spec.authors     = ['yoshoku']
+  spec.email       = ['yoshoku@outlook.com']
 
-  spec.summary       = 'Rumale::Torch'
-  spec.description   = 'Rumale::Torch'
-  spec.homepage      = 'https://github.com/yoshoku/rumale-torch'
-  spec.license       = 'BSD-2-Clause'
+  spec.summary     = 'Rumale::Torch provides the learning and inference by the neural network defined in torch.rb with the same interface as Rumale'
+  spec.description = 'Rumale::Torch provides the learning and inference by the neural network defined in torch.rb with the same interface as Rumale'
+  spec.homepage    = 'https://github.com/yoshoku/rumale-torch'
+  spec.license     = 'BSD-3-Clause'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
