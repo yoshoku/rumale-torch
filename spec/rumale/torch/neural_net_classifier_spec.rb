@@ -10,6 +10,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
   let(:func_vals) { classifier.decision_function(x) }
   let(:predicted) { classifier.predict(x) }
   let(:score) { classifier.score(x, y) }
+  let(:copied) { Marshal.load(Marshal.dump(classifier)) }
 
   before { Torch.manual_seed 1 }
 
@@ -56,6 +57,15 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
       expect(predicted.ndim).to eq(1)
       expect(predicted.shape[0]).to eq(n_samples)
       expect(score).to be_within(0.01).of(1.0)
+    end
+
+    it 'dumps and restores itself using Marshal module.', :aggregate_failures do
+      expect(copied.params).to eq(classifier.params)
+      expect(copied.classes).to eq(classifier.classes)
+      expect(copied.model).to be_nil
+      expect(copied.device).to be_nil
+      expect(copied.optimizer).to be_nil
+      expect(copied.loss).to be_nil
     end
 
     context 'when verbose is "true"' do
