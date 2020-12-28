@@ -48,7 +48,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
       let(:verbose) { true }
 
       it 'outputs debug messages', :aggregate_failures do
-        expect { regressor }.to output(/Epoch/).to_stdout
+        expect { regressor }.to output(/epoch/).to_stdout
       end
     end
 

@@ -134,11 +134,10 @@ module Rumale
       end
 
       def display_epoch(train_loader, test_loader, epoch)
-        puts("Epoch: #{epoch}/#{max_epoch}")
         if test_loader.nil?
-          puts(format('loss: %.4f', evaluate(train_loader)))
+          puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f", epoch, evaluate(train_loader)))
         else
-          puts(format('loss: %.4f - val_loss: %.4f', evaluate(train_loader), evaluate(test_loader)))
+          puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - val_loss: %.4f", epoch, evaluate(train_loader), evaluate(test_loader)))
         end
       end
 

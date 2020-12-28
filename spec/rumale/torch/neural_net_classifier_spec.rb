@@ -62,7 +62,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
       let(:verbose) { true }
 
       it 'outputs debug messages', :aggregate_failures do
-        expect { classifier }.to output(/Epoch/).to_stdout
+        expect { classifier }.to output(/epoch/).to_stdout
       end
     end
 
