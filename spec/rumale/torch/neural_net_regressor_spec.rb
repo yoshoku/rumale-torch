@@ -8,7 +8,8 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
 
   let(:n_samples) { x.shape[0] }
   let(:verbose) { false }
-  let(:regressor) { described_class.new(model: model, batch_size: 20, max_epoch: 20, verbose: verbose).fit(x, y) }
+  let(:validation_split) { 0.1 }
+  let(:regressor) { described_class.new(model: model, batch_size: 20, max_epoch: 20, validation_split: validation_split, verbose: verbose).fit(x, y) }
   let(:predicted) { regressor.predict(x) }
   let(:score) { regressor.score(x, y) }
 
@@ -46,8 +47,18 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
     context 'when verbose is "true"' do
       let(:verbose) { true }
 
-      it 'outputs debug messages.', :aggregate_failures do
+      it 'outputs debug messages', :aggregate_failures do
         expect { regressor }.to output(/Epoch/).to_stdout
+      end
+    end
+
+    context 'when without validation set' do
+      let(:validation_split) { 0 }
+      let(:verbose) { true }
+
+      it 'outputs only training dataset loss', :aggregate_failures do
+        expect { regressor }.not_to output(/val_loss/).to_stdout
+        expect(score).to be_within(0.01).of(1.0)
       end
     end
   end

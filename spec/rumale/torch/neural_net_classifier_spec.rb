@@ -5,7 +5,8 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
   let(:y) { dataset[1] }
   let(:n_samples) { x.shape[0] }
   let(:verbose) { false }
-  let(:classifier) { described_class.new(model: model, batch_size: 20, max_epoch: 20, verbose: verbose).fit(x, y) }
+  let(:validation_split) { 0.1 }
+  let(:classifier) { described_class.new(model: model, batch_size: 20, max_epoch: 20, validation_split: validation_split, verbose: verbose).fit(x, y) }
   let(:func_vals) { classifier.decision_function(x) }
   let(:predicted) { classifier.predict(x) }
   let(:score) { classifier.score(x, y) }
@@ -60,8 +61,18 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
     context 'when verbose is "true"' do
       let(:verbose) { true }
 
-      it 'outputs debug messages.', :aggregate_failures do
+      it 'outputs debug messages', :aggregate_failures do
         expect { classifier }.to output(/Epoch/).to_stdout
+      end
+    end
+
+    context 'when without validation set' do
+      let(:validation_split) { 0 }
+      let(:verbose) { true }
+
+      it 'outputs only training dataset loss', :aggregate_failures do
+        expect { classifier }.not_to output(/val_loss/).to_stdout
+        expect(score).to eq(1)
       end
     end
   end

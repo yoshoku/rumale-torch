@@ -77,24 +77,11 @@ module Rumale
       def fit(x, y)
         y = y.expand_dims(1) if y.ndim == 1
 
-        splitter = Rumale::ModelSelection::ShuffleSplit.new(
-          n_splits: 1, test_size: validation_split, random_seed: random_seed
-        )
-        train_ids, test_ids = splitter.split(x).first
-        x_train = x[train_ids, true]
-        x_test = x[test_ids, true]
-        y_train = y[train_ids, true]
-        y_test = y[test_ids, true]
-
-        train_loader = torch_data_loader(x_train, y_train)
-        test_loader = torch_data_loader(x_test, y_test)
+        train_loader, test_loader = prepare_dataset(x, y)
 
         1.upto(max_epoch) do |epoch|
           train(train_loader)
-          next unless verbose
-
-          puts("Epoch: #{epoch}/#{max_epoch}")
-          puts(format('loss: %.4f - val_loss: %.4f', evaluate(train_loader), evaluate(test_loader)))
+          display_epoch(train_loader, test_loader, epoch) if verbose
         end
 
         self
@@ -110,6 +97,21 @@ module Rumale
       end
 
       private
+
+      def prepare_dataset(x, y)
+        n_validations = (validation_split * x.shape[0]).ceil.to_i
+        return [torch_data_loader(x, y), nil] unless n_validations.positive?
+
+        splitter = Rumale::ModelSelection::ShuffleSplit.new(
+          n_splits: 1, test_size: validation_split, random_seed: random_seed
+        )
+        train_ids, test_ids = splitter.split(x).first
+        x_train = x[train_ids, true]
+        x_test = x[test_ids, true]
+        y_train = y[train_ids, true]
+        y_test = y[test_ids, true]
+        [torch_data_loader(x_train, y_train), torch_data_loader(x_test, y_test)]
+      end
 
       def torch_data_loader(x, y)
         x_tensor = ::Torch.from_numo(x).to(:float32)
@@ -128,6 +130,15 @@ module Rumale
           ls = loss.call(output, target)
           ls.backward
           optimizer.step
+        end
+      end
+
+      def display_epoch(train_loader, test_loader, epoch)
+        puts("Epoch: #{epoch}/#{max_epoch}")
+        if test_loader.nil?
+          puts(format('loss: %.4f', evaluate(train_loader)))
+        else
+          puts(format('loss: %.4f - val_loss: %.4f', evaluate(train_loader), evaluate(test_loader)))
         end
       end
 

@@ -62,7 +62,7 @@ module Rumale
       # @param verbose [Boolean] The flag indicating whether to output loss during epoch.
       # @param random_seed [Integer/Nil] The seed value using to initialize the random generator for data splitting.
       def initialize(model:, device: nil, optimizer: nil, loss: nil,
-                     batch_size: 128, max_epoch: 10, shuffle: true, validation_split: 0.1,
+                     batch_size: 128, max_epoch: 10, shuffle: true, validation_split: 0,
                      verbose: true, random_seed: nil)
         @params = method(:initialize).parameters.each_with_object({}) { |(_, kwd), obj| obj[kwd] = binding.local_variable_get(kwd) }
         @params[:device] ||= ::Torch.device('cpu')
@@ -82,27 +82,14 @@ module Rumale
       # @return [NeuralNetClassifier] The learned classifier itself.
       def fit(x, y)
         encoder = Rumale::Preprocessing::LabelEncoder.new
-        encoder.fit(y)
+        y_encoded = encoder.fit_transform(y)
         @classes = Numo::NArray[*encoder.classes]
 
-        x_train, x_test, y_train, y_test = Rumale::ModelSelection.train_test_split(
-          x, y, test_size: validation_split, stratify: true, random_seed: random_seed
-        )
-
-        y_train = encoder.transform(y_train)
-        y_test = encoder.transform(y_test)
-
-        train_loader = torch_data_loader(x_train, y_train)
-        test_loader = torch_data_loader(x_test, y_test)
+        train_loader, test_loader = prepare_dataset(x, y_encoded)
 
         1.upto(max_epoch) do |epoch|
           train(train_loader)
-          next unless verbose
-
-          puts("Epoch: #{epoch}/#{max_epoch}")
-          puts('loss: %.4f - accuracy: %.4f - val_loss: %.4f - val_accuracy: %.4f' % [
-            evaluate(train_loader), evaluate(test_loader)
-          ].flatten)
+          display_epoch(train_loader, test_loader, epoch) if verbose
         end
 
         self
@@ -128,6 +115,16 @@ module Rumale
 
       private
 
+      def prepare_dataset(x, y)
+        n_validations = (validation_split * x.shape[0]).ceil.to_i
+        return [torch_data_loader(x, y), nil] unless n_validations.positive?
+
+        x_train, x_test, y_train, y_test = Rumale::ModelSelection.train_test_split(
+          x, y, test_size: validation_split, stratify: true, random_seed: random_seed
+        )
+        [torch_data_loader(x_train, y_train), torch_data_loader(x_test, y_test)]
+      end
+
       def torch_data_loader(x, y)
         x_tensor = ::Torch.from_numo(x).to(:float32)
         y_tensor = ::Torch.from_numo(y).to(:int64)
@@ -145,6 +142,15 @@ module Rumale
           ls = loss.call(output, target)
           ls.backward
           optimizer.step
+        end
+      end
+
+      def display_epoch(train_loader, test_loader, epoch)
+        puts("Epoch: #{epoch}/#{max_epoch}")
+        if test_loader.nil?
+          puts(format('loss: %.4f - accuracy: %.4f', *evaluate(train_loader)))
+        else
+          puts(format('loss: %.4f - accuracy: %.4f - val_loss: %.4f - val_accuracy: %.4f', *evaluate(train_loader), *evaluate(test_loader)))
         end
       end
 
