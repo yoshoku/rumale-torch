@@ -1,5 +1,10 @@
 # Rumale::Torch
 
+[![Build Status](https://github.com/yoshoku/rumale-torch/workflows/build/badge.svg)](https://github.com/yoshoku/rumale-torch/actions?query=workflow%3Abuild)
+[![Gem Version](https://badge.fury.io/rb/rumale-torch.svg)](https://badge.fury.io/rb/rumale-torch)
+[![BSD 3-Clause License](https://img.shields.io/badge/License-BSD%203--Clause-orange.svg)](https://github.com/yoshoku/rumale-torch/blob/main/LICENSE.txt)
+[![Documentation](http://img.shields.io/badge/api-reference-blue.svg)](https://yoshoku.github.io/rumale-torch/doc/)
+
 Rumale::Torch provides the learning and inference by the neural network defined in [torch.rb](https://github.com/ankane/torch.rb)
 with the same interface as [Rumale](https://github.com/yoshoku/rumale).
 
