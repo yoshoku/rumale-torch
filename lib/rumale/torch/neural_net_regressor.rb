@@ -98,6 +98,10 @@ module Rumale
 
         train_loader, test_loader = prepare_dataset(x, y)
 
+        model.children.each do |layer|
+          layer.reset_parameters if layer.class.method_defined?(:reset_parameters)
+        end
+
         1.upto(max_epoch) do |epoch|
           train(train_loader)
           display_epoch(train_loader, test_loader, epoch) if verbose
