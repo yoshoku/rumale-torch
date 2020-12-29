@@ -12,6 +12,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
   let(:regressor) { described_class.new(model: model, batch_size: 20, max_epoch: 20, validation_split: validation_split, verbose: verbose).fit(x, y) }
   let(:predicted) { regressor.predict(x) }
   let(:score) { regressor.score(x, y) }
+  let(:copied) { Marshal.load(Marshal.dump(regressor)) }
 
   before { Torch.manual_seed 1 }
 
@@ -42,6 +43,14 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
       expect(predicted.ndim).to eq(1)
       expect(predicted.shape[0]).to eq(n_samples)
       expect(score).to be_within(0.02).of(1.0)
+    end
+
+    it 'dumps and restores itself using Marshal module.', :aggregate_failures do
+      expect(copied.params).to eq(regressor.params)
+      expect(copied.model).to be_nil
+      expect(copied.device).to be_nil
+      expect(copied.optimizer).to be_nil
+      expect(copied.loss).to be_nil
     end
 
     context 'when verbose is "true"' do

@@ -40,6 +40,22 @@ module Rumale
       include Base::BaseEstimator
       include Base::Regressor
 
+      # Return the neural nets defined with torch.rb.
+      # @return [Torch::NN::Module]
+      attr_accessor :model
+
+      # Return the compute device.
+      # @return [Torch::Device]
+      attr_accessor :device
+
+      # Return the optimizer.
+      # @return [Torch::Optim]
+      attr_accessor :optimizer
+
+      # Return the loss function.
+      # @return [Torch::NN]
+      attr_accessor :loss
+
       # Create a new regressor with neural nets defined by torch.rb.
       #
       # @param model [Torch::NN::Module] The neural nets defined with torch.rb.
@@ -56,17 +72,20 @@ module Rumale
       # @param verbose [Boolean] The flag indicating whether to output loss during epoch.
       # @param random_seed [Integer/Nil] The seed value using to initialize the random generator for data splitting.
       def initialize(model:, device: nil, optimizer: nil, loss: nil,
-                     batch_size: 128, max_epoch: 10, shuffle: true, validation_split: 0.1,
-                     verbose: true, random_seed: nil)
-        @params = method(:initialize).parameters.each_with_object({}) { |(_, kwd), obj| obj[kwd] = binding.local_variable_get(kwd) }
-        @params[:device] ||= ::Torch.device('cpu')
-        @params[:optimizer] ||= ::Torch::Optim::Adam.new(model.parameters)
-        @params[:loss] ||= ::Torch::NN::MSELoss.new
-        @params[:random_seed] ||= srand
-        @params.each_key do |name|
-          self.class.send(:define_method, name) { @params[name] }
-          self.class.send(:private, name)
-        end
+                     batch_size: 128, max_epoch: 10, shuffle: true, validation_split: 0,
+                     verbose: false, random_seed: nil)
+        @model = model
+        @device = device || ::Torch.device('cpu')
+        @optimizer = optimizer || ::Torch::Optim::Adam.new(model.parameters)
+        @loss = loss || ::Torch::NN::MSELoss.new
+        @params = {}
+        @params[:batch_size] = batch_size
+        @params[:max_epoch] = max_epoch
+        @params[:shuffle] = shuffle
+        @params[:validation_split] = validation_split
+        @params[:verbose] = verbose
+        @params[:random_seed] = random_seed || srand
+        define_parameter_accessors
       end
 
       # Fit the model with given training data.
@@ -96,7 +115,29 @@ module Rumale
         output.shape[1] == 1 ? output[true, 0].dup : output
       end
 
+      # @!visibility private
+      def marshal_dump
+        { params: @params }
+      end
+
+      # @!visibility private
+      def marshal_load(obj)
+        @model = nil
+        @device = nil
+        @optimizer = nil
+        @loss = nil
+        @params = obj[:params]
+        define_parameter_accessors
+      end
+
       private
+
+      def define_parameter_accessors
+        @params.each_key do |name|
+          self.class.send(:define_method, name) { @params[name] }
+          self.class.send(:private, name)
+        end
+      end
 
       def prepare_dataset(x, y)
         n_validations = (validation_split * x.shape[0]).ceil.to_i
