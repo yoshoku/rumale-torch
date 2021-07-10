@@ -4,16 +4,13 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
-        ruby: [ '2.5', '2.6', '2.7', '3.0' ]
+        ruby: [ '2.6', '2.7', '3.0' ]
     env:
-      LIBTORCH_VERSION: 1.7.1
+      LIBTORCH_VERSION: 1.9.0
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Ruby ${{ matrix.ruby }}
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
       - uses: actions/cache@v2
         with:
           path: ~/libtorch
@@ -25,9 +22,13 @@ jobs:
           cd ~
           wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-$LIBTORCH_VERSION%2Bcpu.zip
           unzip -q libtorch.zip
+      - name: Set up Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: false
       - name: Build and test with Rake
         run: |
-          gem install bundler
           bundle config build.torch-rb --with-torch-dir=$HOME/libtorch
           bundle install
           bundle exec rake
