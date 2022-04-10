@@ -10,7 +10,7 @@ jobs:
   coverage:
     runs-on: ubuntu-20.04
     env:
-      LIBTORCH_VERSION: 1.9.0
+      LIBTORCH_VERSION: 1.11.0
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
