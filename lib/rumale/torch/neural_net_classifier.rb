@@ -193,9 +193,13 @@ module Rumale
 
       def display_epoch(train_loader, test_loader, epoch)
         if test_loader.nil?
-          puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - accuracy: %.4f", epoch, *evaluate(train_loader)))
+          puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - accuracy: %.4f",
+                      epoch, *evaluate(train_loader)))
         else
-          puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - accuracy: %.4f - val_loss: %.4f - val_accuracy: %.4f", epoch, *evaluate(train_loader), *evaluate(test_loader)))
+          # rubocop:disable Layout/LineLength
+          puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - accuracy: %.4f - val_loss: %.4f - val_accuracy: %.4f",
+                      epoch, *evaluate(train_loader), *evaluate(test_loader)))
+          # rubocop:enable Layout/LineLength
         end
       end
 

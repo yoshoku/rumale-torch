@@ -8,8 +8,12 @@ Gem::Specification.new do |spec|
   spec.authors     = ['yoshoku']
   spec.email       = ['yoshoku@outlook.com']
 
-  spec.summary     = 'Rumale::Torch provides the learning and inference by the neural network defined in torch.rb with the same interface as Rumale'
-  spec.description = 'Rumale::Torch provides the learning and inference by the neural network defined in torch.rb with the same interface as Rumale'
+  spec.summary     = <<~MSG
+    Rumale::Torch provides the learning and inference by the neural network defined in torch.rb with the same interface as Rumale
+  MSG
+  spec.description = <<~MSG
+    Rumale::Torch provides the learning and inference by the neural network defined in torch.rb with the same interface as Rumale
+  MSG
   spec.homepage    = 'https://github.com/yoshoku/rumale-torch'
   spec.license     = 'BSD-3-Clause'
 

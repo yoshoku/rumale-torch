@@ -6,7 +6,11 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
   let(:n_samples) { x.shape[0] }
   let(:verbose) { false }
   let(:validation_split) { 0.1 }
-  let(:classifier) { described_class.new(model: model, batch_size: 20, max_epoch: 20, validation_split: validation_split, verbose: verbose).fit(x, y) }
+  let(:classifier) do
+    described_class.new(
+      model: model, batch_size: 20, max_epoch: 20, validation_split: validation_split, verbose: verbose
+    ).fit(x, y)
+  end
   let(:func_vals) { classifier.decision_function(x) }
   let(:predicted) { classifier.predict(x) }
   let(:score) { classifier.score(x, y) }
