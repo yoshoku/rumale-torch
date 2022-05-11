@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = spec.homepage
   spec.metadata['changelog_uri'] = 'https://github.com/yoshoku/rumale-torch/blob/main/CHANGELOG.md'
   spec.metadata['documentation_uri'] = 'https://yoshoku.github.io/rumale-torch/doc/'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
