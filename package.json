@@ -1,0 +1,15 @@
+{
+  "name": "rumale-torch",
+  "repository": "git@github.com:yoshoku/rumale-torch.git",
+  "author": "Atsushi Tatsuma <yoshoku@outlook.com>",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.4",
+    "@commitlint/config-conventional": "^16.2.4",
+    "husky": "^8.0.1"
+  }
+}
