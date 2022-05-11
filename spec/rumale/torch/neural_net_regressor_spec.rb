@@ -24,7 +24,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
     let(:y) { x[true, 0] + x[true, 1]**2 }
 
     let(:model) do
-      class MyNet < Torch::NN::Module
+      Class.new(Torch::NN::Module) do
         def initialize
           super
           @dropout = Torch::NN::Dropout.new(p: 0.1)
@@ -38,8 +38,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
           x = @dropout.call(x)
           @fc2.call(x)
         end
-      end
-      MyNet.new.to(Torch.device('cpu'))
+      end.new.to(Torch.device('cpu'))
     end
 
     it 'learns the model for single target variable problem', :aggregate_failures do
@@ -81,7 +80,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
     let(:n_outputs) { y.shape[1] }
 
     let(:model) do
-      class MyNet < Torch::NN::Module
+      Class.new(Torch::NN::Module) do
         def initialize
           super
           @dropout2 = Torch::NN::Dropout2d.new(p: 0.1)
@@ -95,8 +94,7 @@ RSpec.describe Rumale::Torch::NeuralNetRegressor do
           x = @dropout2.call(x)
           @fc2.call(x)
         end
-      end
-      MyNet.new.to(Torch.device('cpu'))
+      end.new.to(Torch.device('cpu'))
     end
 
     it 'learns the model for multi-target variable problem', :aggregate_failures do

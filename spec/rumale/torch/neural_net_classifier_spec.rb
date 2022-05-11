@@ -30,7 +30,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
     end
 
     let(:model) do
-      class MyNet < Torch::NN::Module
+      Class.new(Torch::NN::Module) do
         def initialize
           super
           @dropout = Torch::NN::Dropout.new(p: 0.2)
@@ -45,8 +45,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
           x = @fc2.call(x)
           Torch::NN::F.softmax(x)
         end
-      end
-      MyNet.new.to(Torch.device('cpu'))
+      end.new.to(Torch.device('cpu'))
     end
 
     it 'classifies two clusters', :aggregate_failures do
@@ -100,7 +99,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
     end
 
     let(:model) do
-      class MyNet < Torch::NN::Module
+      Class.new(Torch::NN::Module) do
         def initialize
           super
           @dropout = Torch::NN::Dropout.new(p: 0.2)
@@ -115,8 +114,7 @@ RSpec.describe Rumale::Torch::NeuralNetClassifier do
           x = @fc2.call(x)
           Torch::NN::F.softmax(x)
         end
-      end
-      MyNet.new.to(Torch.device('cpu'))
+      end.new.to(Torch.device('cpu'))
     end
 
     it 'classifies three clusters', :aggregate_failures do
