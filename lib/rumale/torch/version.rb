@@ -6,6 +6,6 @@ module Rumale
   # the neural nets defined in torch.rb with the same interface as Rumale.
   module Torch
     # The version of Rumale::Torch you are using.
-    VERSION = '0.1.0'
+    VERSION = '0.1.1'
   end
 end
