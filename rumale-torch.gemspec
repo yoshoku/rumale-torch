@@ -33,6 +33,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'rumale'
-  spec.add_runtime_dependency 'torch-rb'
+  spec.add_dependency 'rumale', '~> 0.14', '< 0.24'
+  spec.add_dependency 'torch-rb'
 end
