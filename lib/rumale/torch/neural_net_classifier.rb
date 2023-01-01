@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rumale/base/base_estimator'
+require 'rumale/base/estimator'
 require 'rumale/base/classifier'
 require 'rumale/preprocessing/label_encoder'
 require 'rumale/model_selection/function'
@@ -38,9 +38,8 @@ module Rumale
     #
     #   classifier.predict(x)
     #
-    class NeuralNetClassifier
-      include Base::BaseEstimator
-      include Base::Classifier
+    class NeuralNetClassifier < Rumale::Base::Estimator
+      include Rumale::Base::Classifier
 
       # Return the class labels.
       # @return [Numo::Int32] (size: n_classes)
@@ -80,6 +79,7 @@ module Rumale
       def initialize(model:, device: nil, optimizer: nil, loss: nil,
                      batch_size: 128, max_epoch: 10, shuffle: true, validation_split: 0,
                      verbose: false, random_seed: nil)
+        super()
         @model = model
         @device = device || ::Torch.device('cpu')
         @optimizer = optimizer || ::Torch::Optim::Adam.new(model.parameters)
