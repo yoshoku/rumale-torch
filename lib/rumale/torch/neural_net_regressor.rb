@@ -179,12 +179,14 @@ module Rumale
       end
 
       def display_epoch(train_loader, test_loader, epoch)
+        # rubocop:disable Lint/FormatParameterMismatch
         if test_loader.nil?
           puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f", epoch, evaluate(train_loader)))
         else
           puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - val_loss: %.4f",
                       epoch, evaluate(train_loader), evaluate(test_loader)))
         end
+        # rubocop:enable Lint/FormatParameterMismatch
       end
 
       def evaluate(data_loader)
