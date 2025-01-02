@@ -1,3 +1,6 @@
+# 0.3.0
+- Change the version specification of rumale-core gems.
+
 # 0.2.0
 - Refactor to support the new Rumale API.
 
