@@ -27,8 +27,10 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: false
-      - name: Build and test with Rake
+      - name: Instal torch-rb and other gems
         run: |
           bundle config build.torch-rb --with-torch-dir=$HOME/libtorch
           bundle install
+      - name: Run the default task
+        run: bundle exec rake
           bundle exec rake
