@@ -24,6 +24,7 @@ jobs:
         with:
           ruby-version: 3.4
           bundler-cache: false
+      - name: Instal torch-rb and other gems
         run: |
           bundle config build.torch-rb --with-torch-dir=$HOME/libtorch
           bundle install
