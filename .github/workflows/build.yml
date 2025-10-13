@@ -20,7 +20,7 @@ jobs:
         if: steps.cache-libtorch.outputs.cache-hit != 'true'
         run: |
           cd ~
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-$LIBTORCH_VERSION%2Bcpu.zip
+          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-$LIBTORCH_VERSION%2Bcpu.zip
           unzip -q libtorch.zip
       - name: Set up Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
