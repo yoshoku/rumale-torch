@@ -10,9 +10,15 @@ on:
 jobs:
   rubocop:
     runs-on: ubuntu-latest
+    env:
+      LIBTORCH_VERSION: 2.8.0
     name: RuboCop
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/cache@v3
+        with:
+          path: ~/libtorch
+          key: libtorch-${{ env.LIBTORCH_VERSION }}
       - name: Download LibTorch
         if: steps.cache-libtorch.outputs.cache-hit != 'true'
         run: |
