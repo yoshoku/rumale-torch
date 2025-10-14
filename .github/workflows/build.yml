@@ -17,7 +17,7 @@ jobs:
     env:
       LIBTORCH_VERSION: 2.8.0
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/cache@v3
         with:
           path: ~/libtorch
