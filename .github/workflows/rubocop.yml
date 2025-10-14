@@ -11,28 +11,14 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     env:
-      LIBTORCH_VERSION: 2.8.0
+      BUNDLE_GEMFILE: ${{ github.workspace }}/rubocop.gemfile
     name: RuboCop
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/cache@v3
-        with:
-          path: ~/libtorch
-          key: libtorch-${{ env.LIBTORCH_VERSION }}
-      - name: Download LibTorch
-        if: steps.cache-libtorch.outputs.cache-hit != 'true'
-        run: |
-          cd ~
-          wget -q -O libtorch.zip https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-$LIBTORCH_VERSION%2Bcpu.zip
-          unzip -q libtorch.zip
       - name: Set up Ruby 3.4
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.4
-          bundler-cache: false
-      - name: Instal torch-rb and other gems
-        run: |
-          bundle config build.torch-rb --with-torch-dir=$HOME/libtorch
-          bundle install
+          bundler-cache: true
       - name: Run RuboCop
         run: bundle exec rubocop
