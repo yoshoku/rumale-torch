@@ -15,7 +15,7 @@ jobs:
       matrix:
         ruby: [ '3.2', '3.3', '3.4' ]
     env:
-      LIBTORCH_VERSION: 2.8.0
+      LIBTORCH_VERSION: 2.9.0
     steps:
       - uses: actions/checkout@v5
       - uses: actions/cache@v4
