@@ -196,10 +196,9 @@ module Rumale
           puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - accuracy: %.4f",
                       epoch, *evaluate(train_loader)))
         else
-          # rubocop:disable Layout/LineLength
+          # rubocop:disable-next Layout/LineLength
           puts(format("epoch: %#{max_epoch.to_s.length}d/#{max_epoch} - loss: %.4f - accuracy: %.4f - val_loss: %.4f - val_accuracy: %.4f",
                       epoch, *evaluate(train_loader), *evaluate(test_loader)))
-          # rubocop:enable Layout/LineLength
         end
       end
 
